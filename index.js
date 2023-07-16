@@ -1,7 +1,16 @@
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 
-app.use(express.json())
+app.use(express.json());
+
+morgan.token("body", (req, res) => JSON.stringify(req.body));
+app.use(
+  morgan(
+    ":method :url :status :response-time ms - :res[content-length] :body - :req[content-length]"
+  )
+);
+
 
 let persons = [
   {
@@ -30,7 +39,7 @@ app.get("/info", (request, response) => {
   let message = `
   <h2>Phonebook has info for ${persons.length} people</h2>
   <p> ${new Date()}
-  `
+  `;
   response.send(message);
 });
 
@@ -40,43 +49,43 @@ app.get("/api/persons", (request, response) => {
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id === id);
+  const id = Number(request.params.id);
+  const person = persons.find((person) => person.id === id);
 
-  if(person){
+  if (person) {
     response.json(person);
   } else {
     response.status(404).end();
   }
-})
+});
 
 app.delete("/api/persons/:id", (request, response) => {
-  let id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+  let id = Number(request.params.id);
+  persons = persons.filter((person) => person.id !== id);
 
   response.status(204).end();
-})
+});
 
-app.post('/api/persons', (request, response) => {
-  const newId = Math.floor(Math.random() * 100000)
-  const person = request.body
-  person.id = newId
+app.post("/api/persons", (request, response) => {
+  const newId = Math.floor(Math.random() * 100000);
+  const person = request.body;
+  person.id = newId;
 
-  if(!person.name){
+  if (!person.name) {
     return response.status(400).json({
-      error : 'name missing'
-    })
+      error: "name missing",
+    });
   }
 
-  if(!person.number){
+  if (!person.number) {
     return response.status(400).json({
-      error : 'number missing'
-    })
+      error: "number missing",
+    });
   }
 
   persons.concat(person);
-  response.json(person)
-})
+  response.json(person);
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
