@@ -1,0 +1,13 @@
+{
+  "name": "fullstackopen-part3",
+  "version": "1.0.0",
+  "description": "exercises of fullstack open part 3",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "Axizeaus",
+  "license": "ISC"
+}
